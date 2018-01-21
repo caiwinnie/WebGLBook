@@ -39,7 +39,7 @@
         // Create a shaded, texture-mapped cube and add it to the scene
         // First, create the texture map
         var mapUrl = "../images/molumen_small_funny_angry_monster.jpg";
-        var map = THREE.ImageUtils.loadTexture(mapUrl);
+        var map = new THREE.TextureLoader().load(mapUrl);
         
         // Now, create a Phong material to show shading; pass in the map
         var material = new THREE.MeshPhongMaterial({ map: map });
