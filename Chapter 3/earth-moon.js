@@ -53,59 +53,43 @@ Earth.prototype.init = function()
 
 Earth.prototype.createGlobe = function()
 {
-    // Create our Earth with nice texture - normal map for elevation, specular highlights
-	var surfaceMap = THREE.ImageUtils.loadTexture( "../images/earth_surface_2048.jpg" );
-	var normalMap = THREE.ImageUtils.loadTexture( "../images/earth_normal_2048.jpg" );
-	var specularMap = THREE.ImageUtils.loadTexture( "../images/earth_specular_2048.jpg" );
+    var loader = new THREE.TextureLoader()
+    // 创建多重纹理
+    var surfaceMap = loader.load("../images/earth_surface_2048.jpg"); //
+    var normalMap = loader.load("../images/earth_normal_2048.jpg"); //
+    var specularMap = loader.load("../images/earth_specular_2048.jpg"); // 高光贴图
 
-	var shader = THREE.ShaderUtils.lib[ "normal" ],
-	uniforms = THREE.UniformsUtils.clone( shader.uniforms );
-
-	uniforms[ "tNormal" ].texture = normalMap;
-	uniforms[ "tDiffuse" ].texture = surfaceMap;
-	uniforms[ "tSpecular" ].texture = specularMap;
-
-	uniforms[ "enableDiffuse" ].value = true;
-	uniforms[ "enableSpecular" ].value = true;
-
-	var shaderMaterial = new THREE.ShaderMaterial({
-		fragmentShader: shader.fragmentShader,
-		vertexShader: shader.vertexShader,
-		uniforms: uniforms,
-		lights: true
-	});
+    var material = new THREE.MeshPhongMaterial({
+        map: surfaceMap,
+        normalMap: normalMap,
+        specularMap: specularMap});
 
     var globeGeometry = new THREE.SphereGeometry(1, 32, 32);
 
-    // We'll need these tangents for our shader
-    globeGeometry.computeTangents();
-    var globeMesh = new THREE.Mesh( globeGeometry, shaderMaterial ); 
-    
-    // Let's work in the tilt
+    // 为着色器计算切线
+    // globeGeometry.computeTangents()
+    var globeMesh = new THREE.Mesh(globeGeometry, material)
+
     globeMesh.rotation.x = Earth.TILT;
 
-    // Add it to our group
-    this.object3D.add(globeMesh);
-	
-    // Save it away so we can rotate it
-    this.globeMesh = globeMesh;
+    this.object3D.add(globeMesh)
+
+    this.globeMesh = globeMesh
 }
 
 Earth.prototype.createClouds = function()
 {
-	// Create our clouds
-	var cloudsMap = THREE.ImageUtils.loadTexture( "../images/earth_clouds_1024.png" );
-	var cloudsMaterial = new THREE.MeshLambertMaterial( { color: 0xffffff, map: cloudsMap, transparent:true } );
-
+    var loader = new THREE.TextureLoader()
+    // 创建云层
+    var cloudsMap = loader.load('../images/earth_clouds_1024.png')
+    var cloudsMaterial = new THREE.MeshLambertMaterial({color: 0xffffff, map: cloudsMap, transparent: true});
     var cloudsGeometry = new THREE.SphereGeometry(Earth.CLOUDS_SCALE, 32, 32);
-	cloudsMesh = new THREE.Mesh( cloudsGeometry, cloudsMaterial );
-	cloudsMesh.rotation.x = Earth.TILT;
+    var cloudsMesh = new THREE.Mesh(cloudsGeometry, cloudsMaterial);
+    cloudsMesh.rotation.x = Earth.TILT;
 
-    // Add it to our group
     this.object3D.add(cloudsMesh);
-	
-    // Save it away so we can rotate it
-    this.cloudsMesh = cloudsMesh;
+
+    this.cloudsMesh = cloudsMesh
 }
 
 Earth.prototype.createMoon = function()
@@ -163,7 +147,7 @@ Moon.prototype.init = function()
 	var MOONMAP = "../images/moon_1024.jpg";
 	
     var geometry = new THREE.SphereGeometry(Moon.SIZE_IN_EARTHS, 32, 32);
-    var texture = THREE.ImageUtils.loadTexture(MOONMAP);
+    var texture = new THREE.TextureLoader().load(MOONMAP);
     var material = new THREE.MeshPhongMaterial( { map: texture, 
     	ambient:0x888888 } );
     var mesh = new THREE.Mesh( geometry, material );

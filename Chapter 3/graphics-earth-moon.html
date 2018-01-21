@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>地球-月球</title>
+    <style>
+        body{
+            position: absolute;
+            background-color:#eeeeee;
+            height: 80%;
+            width: 90%;
+        }
+        #container{
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body onload="onload()">
+<div id="container"></div>
+<script src="../libs/Three.js"></script>
+<script src="../libs/Projector.js"></script>
+<script src="../libs/sim.js"></script>
+<script src="./earth-moon.js"></script>
+<script>
+    let renderer, scene, camera
+    let container = document.getElementById('container')
+
+    function onload() {
+        var app = new EarthApp()
+        app.init({
+            container
+        })
+        app.run()
+    }
+
+</script>
+</body>
+</html>
